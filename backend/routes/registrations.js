@@ -1,14 +1,36 @@
 const express = require('express');
 const Registration = require('../models/registration');
-//const authMiddleware = require('../middleware/auth');
+const db = require('../config/db');
 
 const router = express.Router();
+
+async function eventExists(eventId) {
+  try {
+    const [rows] = await db.execute('SELECT id FROM events WHERE id = ?', [eventId]);
+    return rows.length > 0;
+  } catch (error) {
+    console.error('Error checking event existence:', error);
+    return false;
+  }
+}
 
 // READ - Get all registrations
 router.get('/', async (req, res) => {
   try {
     const registrations = await Registration.getAll();
-    res.json(registrations);
+    console.log('Registrations fetched:', registrations);
+    // Ensure all fields are returned
+    const formatted = registrations.map(reg => ({
+      id: reg.id,
+      event_id: reg.event_id,
+      event_title: reg.event_title,
+      participant_name: reg.participant_name,
+      email: reg.email,
+      phone: reg.phone,
+      organization: reg.organization,
+      student_id: reg.student_id,
+    }));
+    res.json(formatted);
   } catch (error) {
     console.error('Error fetching registrations:', error);
     res.status(500).json({ error: 'Failed to load registrations' });
@@ -29,23 +51,49 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// CREATE - Create new registration
+  
 router.post('/', async (req, res) => {
+  console.log('Incoming registration data:', req.body);
   try {
+    const { event_title, participant_name, email, phone, organization, student_id } = req.body;
+    if (!event_title || !participant_name || !email) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    // Case-insensitive event title lookup
+    const [rows] = await db.execute(
+      'SELECT id FROM events WHERE LOWER(title) = LOWER(?)',
+      [event_title.trim()]
+    );
+    if (rows.length === 0) {
+      console.error('Event not found for title:', event_title);
+      return res.status(400).json({ error: 'Event not found' });
+    }
+    const event_id = rows[0].id;
+
     console.log('Creating registration with data:', req.body);
-    const registrationId = await Registration.create(req.body);
-    console.log('Registration created successfully with ID:', registrationId);
+    const registrationId = await Registration.create({
+      event_id,
+      participant_name,
+      email,
+      phone,
+      organization,
+      student_id,
+    });
     res.status(201).json({ id: registrationId });
   } catch (error) {
     console.error('Error creating registration:', error);
-    console.error('Request body:', req.body);
-    res.status(500).json({ error: 'Failed to create registration' });
+    res.status(500).json({ error: 'Failed to register participant' });
   }
 });
 
 // UPDATE - Update registration
 router.put('/:id', async (req, res) => {
   try {
+    const { event_id, participant_name, email } = req.body;
+    if (!event_id || !participant_name || !email) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
     await Registration.update(req.params.id, req.body);
     res.json({ message: 'Registration updated' });
   } catch (error) {

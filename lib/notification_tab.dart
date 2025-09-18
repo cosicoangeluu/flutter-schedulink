@@ -224,7 +224,7 @@ class _NotificationsPageState extends State<NotificationsPage> with SingleTicker
               Expanded(
                 flex: 1,
                 child: DropdownButtonFormField<String>(
-                  value: _selectedStatus,
+                  initialValue: _selectedStatus,
                   decoration: const InputDecoration(
                     labelText: 'All Status',
                     border: OutlineInputBorder(),

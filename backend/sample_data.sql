@@ -1,97 +1,34 @@
--- SQL queries to create tables and insert sample data for the schedulink application
+-- Sample data for events table
+INSERT INTO events (title, date, location, status, description) VALUES
+('Digital Marketing Summit 2024', '2024-03-15', 'Convention Center', 'confirmed', 'A comprehensive summit on digital marketing strategies.'),
+('Leadership Workshop Series', '2024-03-18', 'Business Hub', 'confirmed', 'Interactive workshops on leadership skills.'),
+('Product Launch Webinar', '2024-03-22', 'Online', 'confirmed', 'Virtual launch event for our new product line.'),
+('Customer Success Training', '2024-03-25', 'Training Room A', 'confirmed', 'Training session focused on customer success.'),
+('Tech Conference 2024', '2024-04-01', 'Tech Park', 'confirmed', 'Annual tech conference with industry experts.'),
+('Innovation Hackathon', '2024-04-05', 'Innovation Lab', 'pending', '48-hour hackathon for innovative solutions.'),
+('Networking Mixer', '2024-04-10', 'Downtown Lounge', 'confirmed', 'Casual networking event for professionals.'),
+('Data Science Bootcamp', '2024-04-15', 'University Campus', 'confirmed', 'Intensive bootcamp on data science fundamentals.');
 
---schedulink_db file name on php
-
--- Create users table
-CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  username VARCHAR(255) NOT NULL,
-  email VARCHAR(255) NOT NULL,
-  password VARCHAR(255) NOT NULL,
-  role VARCHAR(50) DEFAULT 'user'
-);
-
--- Insert 5 sample data into users
-INSERT INTO users (username, email, password, role) VALUES
-('admin', 'admin@example.com', 'hashedpassword1', 'admin'),
-('organizer1', 'organizer1@example.com', 'hashedpassword2', 'organizer'),
-('user1', 'user1@example.com', 'hashedpassword3', 'user'),
-('organizer2', 'organizer2@example.com', 'hashedpassword4', 'organizer'),
-('user2', 'user2@example.com', 'hashedpassword5', 'user');
-
--- Create events table
-CREATE TABLE events (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  title VARCHAR(255) NOT NULL,
-  description TEXT,
-  date DATE,
-  time TIME,
-  location VARCHAR(255),
-  capacity INT,
-  organizer_id INT,
-  status VARCHAR(50) DEFAULT 'pending'
-);
-
--- Insert 5 sample data into events
-INSERT INTO events (title, description, date, time, location, capacity, organizer_id, status) VALUES
-('Departamental Orientation', 'Orientation for new students', '2024-12-01', '09:00:00', 'Function Hall', 100, 2, 'approved'),
-('Tech Conference', 'Technology trends and talks', '2024-11-15', '10:00:00', 'EMRC', 50, 4, 'pending'),
-('Workshop on AI', 'Hands-on workshop on artificial intelligence', '2024-12-05', '14:00:00', 'Lab 101', 30, 2, 'approved'),
-('Seminar on Cybersecurity', 'Discussion on latest cybersecurity practices', '2024-11-20', '11:00:00', 'Auditorium', 80, 4, 'pending'),
-('Networking Event', 'Meet and greet for professionals', '2024-12-10', '18:00:00', 'Conference Room', 60, 2, 'approved');
-
--- Create registrations table
-CREATE TABLE registrations (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  event_id INT NOT NULL,
-  participant_name VARCHAR(255),
-  email VARCHAR(255),
-  phone VARCHAR(20),
-  organization VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Insert 5 sample data into registrations
-INSERT INTO registrations (event_id, participant_name, email, phone, organization) VALUES
-(1, 'Angelu Cosico', 'angelu@example.com', '1234567890', 'BSCS'),
-(2, 'Reuven Alcantara', 'reuven@example.com', '0987654321', 'BSCS'),
-(3, 'Juan Dela Cruz', 'juan@example.com', '1112223333', 'Engineering'),
-(4, 'Pedro Penduko', 'pedro@example.com', '4445556666', 'IT Dept'),
-(5, 'Qwerty 123', 'qwe@example.com', '7778889999', 'Business');
-
--- Create notifications table
-CREATE TABLE notifications (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  event_id INT,
-  message TEXT,
-  status VARCHAR(50) DEFAULT 'pending',
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Insert 5 sample data into notifications
-INSERT INTO notifications (event_id, message, status) VALUES
-(1, 'Meeting starts at 9 AM', 'approved'),
-(2, 'Conference schedule updated', 'pending'),
-(3, 'Workshop materials available online', 'approved'),
-(4, 'Seminar registration deadline approaching', 'pending'),
-(5, 'Networking event reminder', 'approved');
-
--- Create resources table
-CREATE TABLE resources (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  name VARCHAR(255) NOT NULL,
-  category VARCHAR(100),
-  total_quantity INT,
-  available_quantity INT,
-  location VARCHAR(255),
-  `condition` VARCHAR(100),
-  status VARCHAR(50)
-);
-
--- Insert 5 sample data into resources
-INSERT INTO resources (name, category, total_quantity, available_quantity, location, `condition`, status) VALUES
-('Projector', 'Electronics', 5, 3, 'Storage Room', 'Good', 'available'),
-('Whiteboard', 'Office Supplies', 10, 7, 'Meeting Room', 'Fair', 'available'),
-('Laptop', 'Electronics', 20, 15, 'IT Lab', 'Excellent', 'available'),
-('Chairs', 'Furniture', 50, 40, 'Auditorium', 'Good', 'available'),
-('Microphone', 'Audio Equipment', 8, 6, 'Sound Room', 'Fair', 'available');
+-- Sample data for registrations table
+-- Assuming event_ids correspond to the inserted events above
+INSERT INTO registrations (event_id, participant_name, email, phone, organization, student_id) VALUES
+(1, 'John Doe', 'john.doe@example.com', '123-456-7890', 'BSBA', '2021001'),
+(1, 'Jane Smith', 'jane.smith@example.com', '123-456-7891', 'BSN', '2021002'),
+(2, 'Alice Johnson', 'alice.johnson@example.com', '123-456-7892', 'CITHM', '2021003'),
+(2, 'Bob Brown', 'bob.brown@example.com', '123-456-7893', 'BsCOE', '2021004'),
+(3, 'Charlie Wilson', 'charlie.wilson@example.com', '123-456-7894', 'BSCS', '2021005'),
+(3, 'Diana Davis', 'diana.davis@example.com', '123-456-7895', 'CTELA', '2021006'),
+(4, 'Eve Evans', 'eve.evans@example.com', '123-456-7896', 'BSBA', '2021007'),
+(4, 'Frank Foster', 'frank.foster@example.com', '123-456-7897', 'BSN', '2021008'),
+(5, 'Grace Garcia', 'grace.garcia@example.com', '123-456-7898', 'CITHM', '2021009'),
+(5, 'Henry Harris', 'henry.harris@example.com', '123-456-7899', 'BsCOE', '2021010'),
+(6, 'Ivy Ingram', 'ivy.ingram@example.com', '123-456-7800', 'BSCS', '2021011'),
+(6, 'Jack Jackson', 'jack.jackson@example.com', '123-456-7801', 'CTELA', '2021012'),
+(7, 'Kate Kelly', 'kate.kelly@example.com', '123-456-7802', 'BSBA', '2021013'),
+(7, 'Liam Lee', 'liam.lee@example.com', '123-456-7803', 'BSN', '2021014'),
+(8, 'Mia Miller', 'mia.miller@example.com', '123-456-7804', 'CITHM', '2021015'),
+(8, 'Noah Nelson', 'noah.nelson@example.com', '123-456-7805', 'BsCOE', '2021016'),
+(1, 'Olivia Olson', 'olivia.olson@example.com', '123-456-7806', 'BSCS', '2021017'),
+(2, 'Peter Parker', 'peter.parker@example.com', '123-456-7807', 'CTELA', '2021018'),
+(3, 'Quinn Quinn', 'quinn.quinn@example.com', '123-456-7808', 'BSBA', '2021019'),
+(4, 'Ryan Reed', 'ryan.reed@example.com', '123-456-7809', 'BSN', '2021020');
